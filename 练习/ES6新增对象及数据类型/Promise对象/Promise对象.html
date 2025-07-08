@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Promise对象</title>
+</head>
+
+<input type="button" value="读取文件" onclick="read()" />
+<div name="result" id="result" style="white-space:pre">
+    <!-- 这里用来显示读取结果 -->
+</div>
+<script language=javascript>
+    // 一、Promise对象的基本概念
+    //
+    // 1、正常执行
+    // function getData(fileName) {
+    //     let objXmlHttp = new XMLHttpRequest();
+    //     objXmlHttp.open("GET", fileName, true);
+    //     objXmlHttp.onreadystatechange = () => {
+    //         if (objXmlHttp.readyState == 4) {
+    //             if (objXmlHttp.status == 200) {
+    //                 let result = document.getElementById("result")
+    //                 result.innerHTML += objXmlHttp.responseText + "<br/>";
+    //             }
+    //             else
+    //                 alert("读取文件失败");
+    //         }
+    //     }
+    //     objXmlHttp.send();
+    // }
+    // function read() {
+    //     getData("1.txt");
+    //     getData("2.txt");
+    //     getData("3.txt");
+    // }
+    // 2、如果将代码中任一文件指定为一个不存在的文件，则页面中将显示其他读取到的文件内容。
+    // function read() {
+    //     getData("1.txt");
+    //     getData("nonexist.txt");
+    //     getData("3.txt");
+    // }
+    // 3、读取任一文件时发生错误即取消全部文件内容的显示
+    // function getData(fileName) {
+    //     let objXmlHttp = new XMLHttpRequest();
+    //     objXmlHttp.open("GET", fileName, true);
+    //     objXmlHttp.onreadystatechange = () => {
+    //         if (objXmlHttp.readyState == 4) {
+    //             if (objXmlHttp.status == 200) {
+    //                 allData += objXmlHttp.responseText + "<br/>";
+    //                 count += 1;
+    //                 if (count == 3) {
+    //                     let result = document.getElementById("result")
+    //                     result.innerHTML = allData;
+    //                 }
+    //             }
+    //             else {
+    //                 if (errFlag == false)
+    //                     alert("读取文件失败");
+    //                 errFlag = true;
+    //             }
+    //         }
+    //     }
+    //     objXmlHttp.send();
+    // }
+    // function read() {
+    //     errFlag = false;
+    //     allData = "";
+    //     count = 0;
+    //     getData("1.txt");
+    //     getData("nonexist.txt");
+    //     getData("3.txt");
+    // }
+    // 4、Promise对象，则可以不使用任何全局变量
+    // function getData(fileName) {
+    //     return new Promise((resolve, reject) => {
+    //         let objXmlHttp = new XMLHttpRequest();
+    //         objXmlHttp.open("GET", fileName, true);
+    //         objXmlHttp.onreadystatechange = () => {
+    //             if (objXmlHttp.readyState == 4) {
+    //                 if (objXmlHttp.status == 200) {
+    //                     resolve(objXmlHttp.responseText);
+    //                 }
+    //                 else {
+    //                     reject();
+    //                 }
+    //             }
+    //         }
+    //         objXmlHttp.send();
+    //     });
+    // }
+    // function read() {
+    //     Promise.all([getData("1.txt"), getData("2.txt"),getData("3.txt")]).then((responses) => {
+    //             let result = document.getElementById("result");
+    //             responses.forEach((response) => {
+    //                 result.innerHTML += response + "<br/>";
+    //             });
+    //         }, () => alert("读取文件失败"));
+    // }
+    // 二、创建Promise对象
+    // 1、创建Promise对象
+    // var promise = new Promise((resolve, reject) => {
+    //     //做一些事情，可以是异步的，然后…
+    //     if (/* 一切正常 */) {
+    //         resolve("一切正常");
+    //     }
+    //     else {
+    //         reject(Error("处理失败"));
+    //     }
+    // });
+    // promise.then((result) => {
+    //     console.log(result); // "一切正常"
+    // }, (err) => {
+    //     console.log(err); // Error: "处理失败"
+    // });
+    // //只指定成功时的回调函数
+    // promise.then((result) => {
+    //     console.log(result); // "一切正常"
+    // });
+    // //只指定失败时的回调函数
+    // promise.then(undefined, (err) => {
+    //     console.log(err); // Error: "处理失败"
+    // });
+    // 2、综合运用
+    // function read() {
+    //     const fileName = "1.txt";
+    //     var promise = new Promise((resolve, reject) => {
+    //         let objXmlHttp = new XMLHttpRequest();
+    //         objXmlHttp.open("GET", fileName, true);
+    //         objXmlHttp.onreadystatechange = () => {
+    //             if (objXmlHttp.readyState == 4) {
+    //                 if (objXmlHttp.status == 200)
+    //                     resolve(objXmlHttp.responseText);
+    //                 else
+    //                     reject();
+    //             }
+    //         }
+    //         objXmlHttp.send();
+    //     });
+    //     promise.then((response) => {
+    //         let result = document.getElementById("result");
+    //         result.innerHTML = response;
+    //     },
+    //         () => alert("读取文件失败")
+    //     );
+    // }
+    // 三、链式调用Promise对象的then方法
+    // var promise = new Promise((resolve, reject) => {
+    //     resolve(1);
+    // });
+
+    // promise.then((val) => {
+    //     console.log(val);   // 输出1
+    //     return val + 2;
+    // }).then((val) => {
+    //     console.log(val);   //输出3
+    // });
+</script>
+</body>
+
+</html>
