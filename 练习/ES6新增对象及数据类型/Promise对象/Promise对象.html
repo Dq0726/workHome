@@ -14,9 +14,19 @@
     姓名:<input type="text" id="name" /><br/>
     年龄:<input type="number"  id="age" />
 </form>  -->
-    <input type="button" value="读取文件" onclick="read()" />
+    <!-- <input type="button" value="读取文件" onclick="read()" />
     <div name="result" id="result" style="white-space:pre">
 
+    </div> -->
+
+    <p>
+    <div></div>
+    <label>请选择一个文件：</label>
+    <input type="file" id="file" multiple />
+    <input type="button" value="读取文件" onclick="read()" />
+    </p>
+    <div name="result" id="result" style="white-space:pre">
+        <!-- 这里用来显示读取结果 -->
     </div>
     <script>
         // 一.Promise对象的基本概念
@@ -105,6 +115,46 @@
         // 五、异常处理
 
         // 六、创建序列
+        var result = document.getElementById("result");
+        var file = document.getElementById("file");
+        var allData = "";
+        function getData(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                //将文件以文本形式读入页面
+                reader.readAsText(file);
+                reader.onload = function () {
+                    allData += this.result + "<br/>";
+                    resolve();
+                }
+                reader.onerror = () => reject()
+            });
+        }
+        function get(file) {
+            return getData(file).catch((err) => {
+                alert("读取文件失败");
+                throw err;
+            });
+        }
+        function getSequence() {
+            let files = [];
+            for (let i = 0; i < document.getElementById("file").files.length; i++) {
+                files.push(document.getElementById("file").files[i]);
+            }
+            let sequence = Promise.resolve();
+            files.forEach((file) => {
+                sequence = sequence.then(() => get(file));
+            });
+            return sequence;
+        }
+        //将文件以文本形式读入页面
+        function read() {
+            Promise.resolve().then(() => getSequence()).then(() => {
+                let result = document.getElementById("result");
+                result.innerHTML = allData;
+            }).catch(() => console.log("读取文件发生错误")).finally(() =>
+                console.log("读取文件完毕"));
+        }
         // 七、执行并处理
         //         Promise.all(arrayOfPromises).then(function(arrayOfResults) {
         //     //回调函数代码略
@@ -141,6 +191,9 @@
     </script>
     <script>
         // 八、async函数与await函数
+    </script>
+    <script>
+
     </script>
 </body>
 
