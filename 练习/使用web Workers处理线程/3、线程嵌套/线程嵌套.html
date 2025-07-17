@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>与线程进行数据交互示例</title>
+<script type="text/javascript">
+// 向后台线程提交随机数组
+const worker = new Worker("script.js");
+worker.postMessage("");
+// 从线程中取得计算结果
+worker.onmessage = function(event) {
+    if (event.data !== "") {
+        const intArray = event.data.split(";");
+        const table = document.getElementById("table");
+        console.log(intArray.length, 234);
+        for (let i = 0; i < intArray.length; i++) {
+            const j = Math.floor(i / 10);
+            const k = i % 10;
+            let tr;
+            if (k === 0) {
+                tr = document.createElement("tr");
+                tr.id = `tr${j}`;
+                table.appendChild(tr);
+            } else {
+                tr = document.getElementById(`tr${j}`);
+            }
+            const td = document.createElement("td");
+            tr.appendChild(td);
+            // 避免越界
+            td.innerHTML = intArray[i]; 
+            td.style.backgroundColor = "blue";
+            td.style.color = "white";
+            td.style.width = "30px";
+        }
+    }
+};
+</script>
+</head>
+<body>
+<h1>从随机生成的数字中抽取3的倍数并显示示例</h1>
+<table id="table">
+</table>
+</body>
