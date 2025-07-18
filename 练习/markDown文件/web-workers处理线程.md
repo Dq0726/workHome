@@ -1,4 +1,4 @@
-s# Web Workers 详解
+# Web Workers 详解
 
 ## 目录
 - [什么是Web Workers](#什么是web-workers)
