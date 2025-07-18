@@ -11,4 +11,6 @@ onmessage = function(event) {
         intStr+=intArray[i];
     }
     postMessage( intStr );
+    // 关闭当前 Worker 线程
+    close();
 }

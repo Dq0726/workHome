@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SharedWorker</title>
+    <script type="text/javascript">
+        function window_onload() {
+            // 使用 const 声明 worker 变量
+            const worker = new SharedWorker('script.js');
+            // 使用 const 声明 div 变量
+            const div = document.getElementById('div1');
+
+    
+
+            // 处理接收到的消息，使用箭头函数简化代码
+            worker.port.addEventListener('message', (e) => {
+                div.textContent = e.data; // 使用 textContent 替代 innerHTML 避免 XSS 风险
+            });
+                    // 显式启动端口连接
+            worker.port.start();
+
+            // 发送消息到 SharedWorker
+            worker.port.postMessage(2);
+
+            // 处理错误事件，使用箭头函数简化代码
+            worker.port.addEventListener('error', (error) => {
+                console.error('SharedWorker 发生错误:', error.message);
+            });
+
+            // 处理端口关闭事件，使用箭头函数简化代码
+            worker.port.addEventListener('close', () => {
+                console.log('SharedWorker 端口已关闭');
+            });
+        } 
+    </script>
+</head>
+<body onload="window_onload()">
+    <h1>在多个页面中使用SharedWorker</h1>
+    <div id="div1"></div>
+</body>
+</html>

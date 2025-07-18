@@ -20,5 +20,8 @@ onmessage = function(event) {
         }
         // 把结果返回给主线程
         postMessage(returnStr);
+        // 关闭当前 Worker 线程
+        close();
     };
+
 };
