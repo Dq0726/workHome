@@ -4,9 +4,10 @@
 <title>检查浏览器是否支持Service Worker</title>
 </head>
 <body>
+    11
 <script>
 if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("/sw.js").then(function(registration)
+    navigator.serviceWorker.register("sw.js").then(function(registration)
     {
         //注册成功
         console.log("Service Worker注册成功，作用范围为："+registration.scope);
