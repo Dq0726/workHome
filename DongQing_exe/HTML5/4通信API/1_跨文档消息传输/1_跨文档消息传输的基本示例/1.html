@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>跨域通信示例</title>
+<script type="text/javascript">
+// (1) 监听message事件
+window.addEventListener("message", function(ev) { 
+  if (ev.origin != "http://localhost:3000" && ev.origin != "http://127.0.0.1:3000") {
+    console.log("Ignored message from origin: " + ev.origin);
+    return;
+  }
+  if (ev.data === "") {
+    console.log("Ignored empty message");
+    return;  // 忽略空消息
+  }       
+  // (3) 显示消息
+  alert("从"+ev.origin + "那里传过来的消息:\n\"" + ev.data + "\"");
+}, false);
+
+function hello() {
+  var iframe = window.frames[0];
+  // (4) 传递消息
+  iframe.postMessage("你好，这是来自主页面的消息", "http://127.0.0.1:3000");
+}
+
+// 页面加载完成后自动发送消息
+window.onload = function() {
+  setTimeout(hello, 1000); // 延迟1秒发送消息
+};
+</script>
+</head>
+<body>
+<h1>跨域通信示例 - 主页面</h1>
+<iframe width="400" height="300" src="2.html" id="communicationFrame">
+</iframe>
+<p>这个示例演示了如何在不同源的文档之间进行通信。主页面会向iframe中的页面发送消息，iframe中的页面收到消息后会回复一条消息。</p>
+</body>
+</html>

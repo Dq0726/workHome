@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>通道通信示例-子页面A</title>
+<script type="text/javascript">
+function window_onload(){
+    var mc, portMessageHandler;
+    mc = new MessageChannel();
+
+    // 向父页面发送端口及消息
+    // 添加延迟确保parent.html准备好接收消息
+    setTimeout(function() {
+        console.log('About to send message to parent');
+        window.parent.postMessage('子页面childrenA已加载完毕',
+        'http://127.0.0.1:3000/parent.html',[mc.port2]);
+        console.log('Message sent to parent');
+    }, 1000);
+
+    // 定义本页面中端口接收到消息时的事件处理函数中的内容
+    portMessageHandler = function(portMsgEvent){
+        alert( portMsgEvent.data );
+    }
+
+    // 定义本页面中端口接收到消息时的事件处理函数
+    mc.port1.addEventListener('message', portMessageHandler, false);
+
+    // 打开本页面中的端口,开始监听
+    mc.port1.start();
+}
+</script>
+</head>
+<body onload="window_onload()">
+    通道通信示例-子页面A
+</body>
+</html>

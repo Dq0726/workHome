@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>通道通信示例</title>
+<script type="text/javascript">
+function window_onload(){
+console.log('Parent window loaded');
+    var iframes, messageHandler;
+
+    iframes = window.frames;
+
+    // 定义接收到消息时的事件处理函数中的内容
+messageHandler = function(messageEvent){
+    console.log('Parent received message:', messageEvent.data);
+    console.log('Ports length:', messageEvent.ports.length);
+    if( messageEvent.ports.length > 0 ){
+        console.log('Ports received, forwarding to childrenB');
+        // 将端口转发给第二个iframe元素中的页面
+        iframes[1].postMessage(messageEvent.data,
+        'http://127.0.0.1:3000/childrenB.html',
+        messageEvent.ports);
+    }
+}
+
+    // 开始对第一个iframe元素中的页面进行监听
+    window.addEventListener('message',messageHandler,false);
+}
+</script>
+</head>
+<body onload="window_onload()">
+<h1>通道通信示例</h1>
+<iframe style="display:none" 
+
+src="http://127.0.0.1:3000/childrenA.html">
+</iframe>
+<iframe style="display:none" 
+src="http://127.0.0.1:3000/childrenB.html">
+</iframe>
+</body>
+</html>

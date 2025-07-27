@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>跨域通信 - iframe页面</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f0f8ff;
+}
+</style>
+<script type="text/javascript">
+window.addEventListener("message", function(ev) {
+    console.log("Received message:", ev);
+    
+    // 检查消息来源
+    if (ev.origin != "http://localhost:3000" && ev.origin != "http://127.0.0.1:3000") {
+        console.log("Ignored message from unknown origin: " + ev.origin);
+        return;
+    }
+    
+    // 显示收到的消息
+    document.body.innerHTML = "<h2>从 "+ev.origin+" 那里传来的消息</h2>" +
+       "<p>内容: \"" + ev.data + "\"</p>" +
+       "<p>当前页面地址: " + window.location.href + "</p>";
+    
+    // (5) 向主页面发送回复消息
+    ev.source.postMessage("你好，这是来自iframe的回复消息。这里是" + window.location.href, ev.origin);
+}, false);
+
+// 页面加载完成提示
+window.onload = function() {
+  document.body.innerHTML = "<h2>iframe页面已加载</h2><p>等待来自主页面的消息...</p>";
+};
+</script>
+</head>
+<body>
+<h2>iframe页面已加载</h2>
+<p>等待来自主页面的消息...</p>
+</body>
+</html>
