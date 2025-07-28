@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Blob数据传输演示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 100px;
+            margin: 10px 0;
+        }
+        #receivedImage {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>WebSocket Blob数据传输演示</h2>
+        
+        <div>
+            <button onclick="connect()">连接WebSocket</button>
+            <button onclick="sendImageData()">发送图片数据</button>
+            <button onclick="disconnect()">断开连接</button>
+        </div>
+        
+        <div id="status">未连接</div>
+        <div id="messages">消息记录将显示在这里</div>
+        
+        <h3>接收到的图片:</h3>
+        <img id="receivedImage" alt="接收到的图片将显示在这里">
+    </div>
+
+    <script>
+        var webSocket;
+        var isConnected = false;
+        
+        function connect() {
+            if (isConnected) {
+                addMessage("已经连接");
+                return;
+            }
+            
+            try {
+                // 注意: 这里需要一个真实的WebSocket服务器
+                // 在实际使用中，你需要替换为有效的服务器地址
+                var host = "ws://localhost:8005";
+                webSocket = new WebSocket(host);
+                
+                // 设置WebSocket接收二进制数据的格式为Blob
+                webSocket.binaryType = "blob";
+                
+                webSocket.onopen = function(event) {
+                    isConnected = true;
+                    document.getElementById("status").innerHTML = "已连接";
+                    addMessage("连接成功");
+                };
+                
+                webSocket.onmessage = function(event) {
+                    if (event.data instanceof Blob) {
+                        addMessage("收到Blob数据，大小: " + event.data.size + " 字节，类型: " + event.data.type);
+                        
+                        // 将Blob转换为图片显示
+                        var imgURL = URL.createObjectURL(event.data);
+                        document.getElementById("receivedImage").src = imgURL;
+                        addMessage("图片已显示");
+                    } else {
+                        addMessage("收到消息: " + event.data);
+                    }
+                };
+                
+                webSocket.onclose = function(event) {
+                    isConnected = false;
+                    document.getElementById("status").innerHTML = "已断开";
+                    addMessage("连接已断开");
+                };
+                
+                webSocket.onerror = function(error) {
+                    addMessage("WebSocket错误: " + error);
+                };
+                
+            } catch(exception) {
+                addMessage("连接异常: " + exception.message);
+            }
+        }
+        
+        function sendImageData() {
+            if (!isConnected) {
+                addMessage("请先连接");
+                return;
+            }
+            
+            try {
+                // 创建一个简单的canvas并转换为Blob发送
+                var canvas = document.createElement("canvas");
+                canvas.width = 200;
+                canvas.height = 100;
+                var ctx = canvas.getContext("2d");
+                
+                // 绘制渐变背景
+                var gradient = ctx.createLinearGradient(0, 0, 200, 100);
+                gradient.addColorStop(0, "blue");
+                gradient.addColorStop(1, "red");
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 200, 100);
+                
+                // 添加文字
+                ctx.font = "20px Arial";
+                ctx.fillStyle = "white";
+                ctx.textAlign = "center";
+                ctx.fillText("WebSocket Blob演示", 100, 55);
+                
+                // 转换为Blob并发送
+                canvas.toBlob(function(blob) {
+                    webSocket.send(blob);
+                    addMessage("已发送图片Blob数据，大小: " + blob.size + " 字节");
+                }, "image/png");
+                
+            } catch(exception) {
+                addMessage("发送异常: " + exception.message);
+            }
+        }
+        
+        function disconnect() {
+            if (webSocket) {
+                webSocket.close();
+            }
+        }
+        
+        function addMessage(message) {
+            var messages = document.getElementById("messages");
+            var time = new Date().toLocaleTimeString();
+            messages.innerHTML += "<p>[" + time + "] " + message + "</p>";
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

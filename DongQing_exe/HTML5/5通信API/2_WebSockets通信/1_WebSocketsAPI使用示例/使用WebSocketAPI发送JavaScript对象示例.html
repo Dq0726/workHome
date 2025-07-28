@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket对象发送演示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #messages {
+            height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .message {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket对象发送演示</h1>
+    
+    <div class="container">
+        <h2>连接控制</h2>
+        <button onclick="connect()">连接WebSocket</button>
+        <button onclick="disconnect()">断开连接</button>
+        <div id="status">未连接</div>
+    </div>
+    
+    <div class="container">
+        <h2>发送用户数据</h2>
+        <label>用户名: <input type="text" id="userName" placeholder="输入用户名"></label><br>
+        <label>年龄: <input type="number" id="userAge" placeholder="输入年龄"></label><br>
+        <label>数据库类型: 
+            <select id="dataType">
+                <option value="SQLServer">SQL Server</option>
+                <option value="ORACLE">Oracle</option>
+                <option value="MySQL">MySQL</option>
+            </select>
+        </label><br>
+        <button onclick="sendUserData()">发送用户数据</button>
+    </div>
+    
+    <div class="container">
+        <h2>消息记录</h2>
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        var webSocket;
+        var isConnected = false;
+        
+        function connect() {
+            if (isConnected) {
+                addMessage("已经连接到服务器");
+                return;
+            }
+            
+            try {
+                var host = "ws://localhost:8005";
+                webSocket = new WebSocket(host);
+                
+                webSocket.onopen = function(event) {
+                    isConnected = true;
+                    updateStatus("已连接");
+                    addMessage("成功连接到WebSocket服务器");
+                };
+                
+                webSocket.onmessage = function(event) {
+                    addMessage("收到服务器消息: " + event.data);
+                    
+                    // 尝试解析JSON数据
+                    try {
+                        var data = JSON.parse(event.data);
+                        if (data.result !== undefined) {
+                            addMessage("数据库操作结果: " + (data.result ? "成功" : "失败") + 
+                                      ", 时间: " + new Date(data.time).toLocaleString());
+                        }
+                    } catch(e) {
+                        // 如果不是JSON数据，则按普通文本处理
+                    }
+                };
+                
+                webSocket.onclose = function(event) {
+                    isConnected = false;
+                    updateStatus("已断开");
+                    addMessage("连接已断开");
+                };
+                
+                webSocket.onerror = function(error) {
+                    addMessage("连接发生错误: " + error);
+                };
+                
+            } catch(exception) {
+                addMessage("连接时发生异常: " + exception.message);
+            }
+        }
+        
+        function disconnect() {
+            if (webSocket) {
+                webSocket.close();
+            }
+        }
+        
+        function sendUserData() {
+            if (!isConnected) {
+                addMessage("请先连接到服务器");
+                return;
+            }
+            
+            var userName = document.getElementById("userName").value;
+            var userAge = document.getElementById("userAge").value;
+            var dataType = document.getElementById("dataType").value;
+            
+            if (!userName || !userAge) {
+                addMessage("请填写完整的用户信息");
+                return;
+            }
+            
+            // 创建要发送的JavaScript对象
+            var userData = {
+                userName: userName,
+                userAge: parseInt(userAge),
+                DataType: dataType,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                // 将JavaScript对象转换为JSON字符串并发送
+                webSocket.send(JSON.stringify(userData));
+                addMessage("已发送用户数据: " + JSON.stringify(userData));
+            } catch(exception) {
+                addMessage("发送数据时出错: " + exception.message);
+            }
+        }
+        
+        function addMessage(message) {
+            var messagesDiv = document.getElementById("messages");
+            var messageElement = document.createElement("div");
+            messageElement.className = "message";
+            messageElement.textContent = "[" + new Date().toLocaleTimeString() + "] " + message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function updateStatus(status) {
+            document.getElementById("status").textContent = "连接状态: " + status;
+        }
+    </script>
+</body>
+</html>

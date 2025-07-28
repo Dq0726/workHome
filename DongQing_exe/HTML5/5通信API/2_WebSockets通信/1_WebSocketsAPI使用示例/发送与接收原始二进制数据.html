@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket二进制数据传输演示</title>
+</head>
+<body>
+    <h2>WebSocket二进制数据传输演示</h2>
+    
+    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas><br>
+    
+    <button onclick="connect()">连接WebSocket</button>
+    <button onclick="sendBinaryData()">发送二进制数据</button>
+    <button onclick="disconnect()">断开连接</button>
+    
+    <div id="status">未连接</div>
+    <div id="messages"></div>
+
+    <script>
+        var webSocket;
+        var isConnected = false;
+        
+        // 绘制简单图形到canvas
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(0, 0, 150, 75);
+        
+        function connect() {
+            if (isConnected) {
+                addMessage("已经连接");
+                return;
+            }
+            
+            try {
+                var host = "ws://localhost:8005";
+                webSocket = new WebSocket(host);
+                
+                webSocket.onopen = function(event) {
+                    isConnected = true;
+                    document.getElementById("status").innerHTML = "已连接";
+                    addMessage("连接成功");
+                };
+                
+                webSocket.onmessage = function(event) {
+                    if (event.data instanceof ArrayBuffer) {
+                        addMessage("收到二进制数据，长度: " + event.data.byteLength + " 字节");
+                    } else {
+                        addMessage("收到消息: " + event.data);
+                    }
+                };
+                
+                webSocket.onclose = function(event) {
+                    isConnected = false;
+                    document.getElementById("status").innerHTML = "已断开";
+                    addMessage("连接已断开");
+                };
+                
+            } catch(exception) {
+                addMessage("连接异常: " + exception.message);
+            }
+        }
+        
+        function sendBinaryData() {
+            if (!isConnected) {
+                addMessage("请先连接");
+                return;
+            }
+            
+            try {
+                // 获取canvas图像数据
+                var canvas = document.getElementById("myCanvas");
+                var ctx = canvas.getContext("2d");
+                var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // 转换为Uint8Array
+                var binary = new Uint8Array(imgData.data);
+                
+                // 发送二进制数据
+                webSocket.send(binary.buffer);
+                addMessage("已发送二进制数据，长度: " + binary.length + " 字节");
+                
+            } catch(exception) {
+                addMessage("发送异常: " + exception.message);
+            }
+        }
+        
+        function disconnect() {
+            if (webSocket) {
+                webSocket.close();
+            }
+        }
+        
+        function addMessage(message) {
+            var messages = document.getElementById("messages");
+            messages.innerHTML += "<p>[" + new Date().toLocaleTimeString() + "] " + message + "</p>";
+        }
+    </script>
+</body>
+</html>

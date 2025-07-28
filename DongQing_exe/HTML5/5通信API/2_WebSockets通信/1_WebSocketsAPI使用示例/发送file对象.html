@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket文件对象传输演示</title>
+</head>
+<body>
+    <h2>WebSocket文件对象传输演示</h2>
+    
+    <div>
+        <label for="file1">选择文件:</label>
+        <input type="file" id="file1" accept="*/*"><br><br>
+        
+        <button onclick="connect()">连接WebSocket</button>
+        <button onclick="sendFile()" id="sendBtn" disabled>发送文件</button>
+        <button onclick="disconnect()">断开连接</button>
+    </div>
+    
+    <div id="status">未连接</div>
+    <div id="messages"></div>
+
+    <script>
+        var webSocket;
+        var isConnected = false;
+        
+        // 监听文件选择变化
+        document.getElementById('file1').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                document.getElementById('sendBtn').disabled = !isConnected;
+            } else {
+                document.getElementById('sendBtn').disabled = true;
+            }
+        });
+        
+        function connect() {
+            if (isConnected) {
+                addMessage("已经连接");
+                return;
+            }
+            
+            try {
+                var host = "ws://localhost:8005";
+                webSocket = new WebSocket(host);
+                
+                webSocket.onopen = function(event) {
+                    isConnected = true;
+                    document.getElementById("status").innerHTML = "已连接";
+                    addMessage("连接成功");
+                    // 如果已选择文件，则启用发送按钮
+                    if (document.getElementById('file1').files.length > 0) {
+                        document.getElementById('sendBtn').disabled = false;
+                    }
+                };
+                
+                webSocket.onmessage = function(event) {
+                    addMessage("收到回复: " + event.data);
+                };
+                
+                webSocket.onclose = function(event) {
+                    isConnected = false;
+                    document.getElementById("status").innerHTML = "已断开";
+                    document.getElementById('sendBtn').disabled = true;
+                    addMessage("连接已断开");
+                };
+                
+            } catch(exception) {
+                addMessage("连接异常: " + exception.message);
+            }
+        }
+        
+        function sendFile() {
+            if (!isConnected) {
+                addMessage("请先连接");
+                return;
+            }
+            
+            var fileInput = document.getElementById('file1');
+            var file = fileInput.files[0];
+            
+            if (!file) {
+                addMessage("请选择一个文件");
+                return;
+            }
+            
+            try {
+                // 直接发送File对象
+                webSocket.send(file);
+                addMessage("已发送文件: " + file.name + " (大小: " + file.size + " 字节)");
+                
+            } catch(exception) {
+                addMessage("发送异常: " + exception.message);
+            }
+        }
+        
+        function disconnect() {
+            if (webSocket) {
+                webSocket.close();
+            }
+        }
+        
+        function addMessage(message) {
+            var messages = document.getElementById("messages");
+            messages.innerHTML += "<p>[" + new Date().toLocaleTimeString() + "] " + message + "</p>";
+        }
+    </script>
+</body>
+</html>
+```
