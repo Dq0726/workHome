@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Server-Sent Events API使用示例</title>
+<script type="text/javascript">
+     var source;
+    if (typeof(EventSource) !== "undefined") {
+        // 创建 EventSource 实例，连接到 /sse 路径
+        var source = new EventSource("/sse");
+
+        // 处理自定义事件 "requests"
+        source.addEventListener('requests', function(event) {
+            document.getElementById("result").innerHTML += event.data + "<br />";
+        });
+
+        // 处理默认消息事件
+        source.onmessage = function(event) {
+            document.getElementById("result").innerHTML += event.data + "<br />";
+        };
+
+        // 处理错误事件
+        source.onerror = function(event) {
+            console.error('SSE error:', event);
+            
+            //source.close();
+        };
+    } else {
+        document.getElementById("result").innerHTML = "对不起,您的浏览器不支持Server-Sent Events API!";
+    }
+</script>
+</head>
+<body>
+<h1>Server-Sent Events API使用示例</h1>
+<div id="result"></div>
+</body>
+</html>
