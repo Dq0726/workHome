@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>创建Shadow DOM</title>
+</head>
+<body>
+<div id="div">原有文字</div>
+</body>
+<script>
+let host = document.getElementById('div');
+let root = host.attachShadow({mode: 'open'});
+root.textContent = '创建Shadow DOM';
+div
+</script>
+</html>

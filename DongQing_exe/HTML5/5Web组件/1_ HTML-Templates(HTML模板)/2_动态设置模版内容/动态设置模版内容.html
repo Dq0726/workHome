@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>动态设置模板内容</title>
+</head>
+<body>
+<input type=button onclick="useTemplate()" value="调用模板" />
+<div id="container"></div>
+<template id="template">
+        <div>模板被调用次数: <span id="span">0</span></div>
+        <script>alert('模板被调用!')</script>
+</template>
+</body>
+<script>
+function useTemplate() {
+        let content = document.getElementById('template').content;
+        //设置模板内部元素中的文字
+        let span = content.getElementById('span');//获取模板中的span元素
+        span.textContent = parseInt(span.textContent) + 1;
+        document.getElementById('container').appendChild(
+        content.cloneNode(true));
+}
+</script>
+</html>

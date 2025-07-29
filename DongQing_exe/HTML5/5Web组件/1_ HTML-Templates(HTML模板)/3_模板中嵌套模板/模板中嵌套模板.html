@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>定义模板内容</title>
+</head>
+<body>
+<table>
+<tr>
+        <td>第一行第一列</td>
+        <td style="text-align:center">第一行第二列</td>
+        <td>第一行第三列</td>
+</tr>
+<tr>
+        <td>第二行第一列</td>
+        <td id="td1">
+            <template id="mytemplate">
+            <img id='img' src="" alt="我的图片">
+            <div id="container">
+                <template id="template">
+                    <div>模板示例文字</div>
+                </template>
+            </div>
+            </template>
+        </td>
+        <td>第二行第三列</td>
+</tr>
+<tr>
+        <td>第三行第一列</td>
+        <td style="text-align:center">第三行第二列</td>
+        <td>第三行第三列</td>
+</tr>
+</table>
+</body>
+<script>
+let t = document.getElementById('mytemplate');
+//指定img元素的src属性值
+t.content.getElementById('img').src = 'https://picsum.photos/300/200?random=1';
+document.getElementById("td1").appendChild(t.content.cloneNode(true));
+let content = document.getElementById('template').content;
+document.getElementById('container').appendChild(
+content.cloneNode(true));
+</script>
+</html>
