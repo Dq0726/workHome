@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>BroadcastChannel 示例 - 页面1</title>
+    <title>BroadcastChannel 示例 - 页面2</title>
 </head>
 <body>
-    <h2>页面 1</h2>
+    <h2>页面 2</h2>
     
     <div id="messageDiv">接收到的消息将显示在这里...</div>
     
@@ -13,7 +13,7 @@
     <button id="sendButton">发送消息</button>
 
     <script>
-        // 创建BroadcastChannel对象
+        // 创建BroadcastChannel对象（与页面1使用相同名称）
         const channel = new BroadcastChannel('myChannel');
         const messageDiv = document.getElementById('messageDiv');
         const messageInput = document.getElementById('messageInput');
