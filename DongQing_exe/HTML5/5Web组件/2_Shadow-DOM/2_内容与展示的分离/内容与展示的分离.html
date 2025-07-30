@@ -1,55 +1,62 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>编写Web组件</title>
-</head>
-<body>
-<div id="nameComponent"></div>
-<template id="nameComponentTemplate">
-<style>
-.outer {
-        border: 2px solid brown;
-        border-radius:15px;
-        background: red;
-        font-size: 20px;
-        width: 500px;
-        height:100px;
-        text-align: center;
-        padding-left:15px;
-        padding-right:15px;
-}
-.boilerplate {
-        color: white;
-        font-family: sans-serif;
-        padding: 5px;
-        padding-bottom:0px;
-}
-.name {
-        margin-top:20px;
-        color: black;
-        background: white;
-        font-family: "宋体";
-        font-size: 30px;
-        padding-top:5px;
-        border-radius:15px;
-}
-</style>
-<div class="outer">
-        <div class="boilerplate">
-            你好，欢迎阅读
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>实现内容与展示的分离</title>
+  </head>
+  <body>
+    <div id="nameComponent">
+      <div id="myContent" slot="testSlot"></div>
+    </div>
+    <template id="nameComponentTemplate">
+      <style>
+        .outer {
+          border: 2px solid brown;
+          border-radius: 15px;
+          background: red;
+          font-size: 20px;
+          width: 500px;
+          height: 100px;
+          text-align: center;
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+        .boilerplate {
+          color: white;
+          font-family: sans-serif;
+          padding: 5px;
+          padding-bottom: 0px;
+        }
+        .name {
+          margin-top: 20px;
+          color: black;
+          background: white;
+          font-family: "宋体";
+          font-size: 30px;
+          padding-top: 5px;
+          border-radius: 15px;
+        }
+      </style>
+      <div class="outer">
+        <div class="boilerplate">你好，欢迎阅读</div>
         <div class="name">
-            《HTML 5与CSS 3权威指南》
+          <slot name="testSlot"></slot>
         </div>
-</div>
-</template>
-</body>
-<script>
-let host = document.getElementById('nameComponent').attachShadow({
-mode: 'open'});
-let template = document.getElementById('nameComponentTemplate');
-host.appendChild(template.content);
-template.remove();
-</script>
+      </div>
+    </template>
+    <input type="button" onclick="changeContent();" value="修改内容" />
+  </body>
+  <script>
+    let host = document.getElementById("nameComponent").attachShadow({
+      mode: "open",
+    });
+    let template = document.getElementById("nameComponentTemplate");
+    host.appendChild(template.content);
+    template.remove();
+    document.getElementById("myContent").innerHTML =
+      "《HTML 5与CSS 3权威指南》";
+    function changeContent() {
+      document.getElementById("myContent").innerHTML = "修改后的内容";
+    }
+  </script>
 </html>

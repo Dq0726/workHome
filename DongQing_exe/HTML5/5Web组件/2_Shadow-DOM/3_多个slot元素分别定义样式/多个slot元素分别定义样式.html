@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>分别定义每个slot元素中所显示内容的样式</title>
+</head>
+<body>
+<div id="nameComponent" is="better-button">
+<div slot='first' id="myContent"></div>
+<div slot='second'>示例文字2</div>
+<div slot='three'>示例文字3</div>
+</div>
+<template id="nameComponentTemplate">
+<div style="background:pink; padding: 1em;">
+        <div style="color: red;">
+            <slot name="first"></slot>
+        </div>
+        <div style="color: yellow;">
+            <slot name="second"></slot>
+        </div>
+        <div style="color: blue;">
+            <slot name="three"></slot>
+        </div>
+    </div>
+</template>
+</body>
+<script>
+    let host = document.getElementById("nameComponent").attachShadow({
+      mode: "open",
+    });
+    let template = document.getElementById("nameComponentTemplate");
+    host.appendChild(template.content);
+    template.remove();
+        document.getElementById("myContent").innerHTML =
+      "《HTML 5与CSS 3权威指南》";
+</script>
+</html>

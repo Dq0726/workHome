@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>根据组件的环境进行主题化</title>
+</head>
+<body class="darktheme">
+<div ><h3>实际运行示例:</h3></div>
+<div  id="div2"><h3>Host标题</h3></div>
+<script>
+let root = document.getElementById('div2').attachShadow({mode: 'open'});
+root.innerHTML = '<style>:host-context(.darktheme) {color: white;background: black;}</style><h3>Shadow DOM标题</h3>';
+</script>
+</body>
+</html>

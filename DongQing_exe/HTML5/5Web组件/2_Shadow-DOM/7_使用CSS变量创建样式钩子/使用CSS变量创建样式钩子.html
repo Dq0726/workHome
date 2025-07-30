@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>使用CSS变量创建样式钩子</title>
+<style>
+div[theme=darkTheme] {
+    margin-bottom: 32px;
+    --component-bg: black;
+    --component-color: white;
+}
+</style>
+</head>
+<body>
+<div id="host" theme="darkTheme"></div>
+<script>
+let root= document.getElementById('host').attachShadow({mode:'open'});
+root.innerHTML = `<style>:host([theme=darkTheme]) {
+background: var(--component-bg);
+color: var(--component-color);} 
+:host{border-radius:10px;padding:10px;}
+</style><div>示例文字</div>`
+</script>
+</body>
+</html>

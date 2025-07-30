@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>观察自定义元素特殊生命周期钩子回调函数的调用</title>
+<style>
+app-drawer{
+    background-color:blue;
+    color:white;
+    display:block;
+    width:200px;
+    height:200px;
+}
+</style>
+<script>
+class AppDrawer extends HTMLElement {
+    //一个针对open属性的getter/setter
+    get open() {
+        return this.getAttribute('open');
+    }
+
+    set open(val) {
+        //为元素设置open属性
+        this.setAttribute('open',val);
+        this.toggleDrawer();
+    }
+    //可以定义构造器函数
+    constructor() {
+        //定义构造器函数时总是首先调用super()!
+        super();
+        console.log("constructor方法被调用");
+        //对<app-drawer>设置一个click监听器.
+        this.addEventListener('click', e => {
+            //如果禁用则返回
+            if (this.disabled) {
+                return;
+            }
+            this.toggleDrawer();
+        });
+    }
+    static get observedAttributes() {return ['open']; }
+    connectedCallback() {
+        console.log("connectedCallback方法被调用");
+    }
+    disconnectedCallback() {
+        console.log("disconnectedCallback方法被调用");
+    }
+    attributeChangedCallback(attrName, oldVal, newVal) {
+        console.log("attributeChangedCallback方法被调用");
+        console.log("attrName:"+attrName);
+        console.log("oldVal:"+oldVal);
+        console.log("newVal:"+newVal);
+    }
+    toggleDrawer() {
+        if(this.open=="false"){
+            this.innerHTML="抽屉被打开";
+            this.setAttribute('open', 'true');
+        }
+        else{
+            this.innerHTML="抽屉被关闭";
+            this.setAttribute('open', 'false');
+        }
+    }
+}
+
+customElements.define('app-drawer', AppDrawer);
+</script>
+</head>
+<body>
+<app-drawer id="myAppDrawer" open="false">抽屉被关闭</app-drawer>
+<input type="button" value="移除元素" onclick="removeElem()" />
+<script>
+function removeElem(){
+    let myAppDrawer=document.getElementById("myAppDrawer");
+    myAppDrawer.remove();
+}
+</script>
+</body>
+</html>

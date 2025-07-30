@@ -1,0 +1,131 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>自定义新的HTML元素</title>
+<style>
+app-drawer{
+    background-color:blue;
+    color:white;
+    display:block;
+    width:200px;
+    height:200px;
+}
+</style>
+<script>
+class AppDrawer extends HTMLElement {
+}
+window.customElements.define('app-drawer', AppDrawer);
+</script>
+</head>
+<body>
+<app-drawer>
+  <p>这是抽屉里的内容</p>
+</app-drawer>
+</body>
+</html> -->
+
+
+
+
+
+<!-- 2、结合shadow DOM 创建新的元素 -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>自定义新的HTML元素</title>
+<style>
+</style>
+<script>
+class AppDrawer extends HTMLElement {
+  constructor() {
+    super();
+    // 创建 shadow DOM
+    const shadow = this.attachShadow({mode: 'open'});
+    
+    // 添加内容和样式
+    shadow.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          background: #f0f0f0;
+          padding: 10px;
+          border: 1px solid #ccc;
+        }
+      </style>
+      <div>
+        <h2>这是一个自定义抽屉组件</h2>
+        <slot></slot>
+      </div>
+    `;
+  }
+}
+
+window.customElements.define('app-drawer', AppDrawer);
+</script>
+</head>
+<body>
+<app-drawer>
+  <p>这是抽屉里的内容</p>
+</app-drawer>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>为新元素添加属性或方法</title>
+<style>
+app-drawer{
+    background-color:blue;
+    color:white;
+    display:block;
+    width:200px;
+    height:200px;
+}
+</style>
+<script>
+class AppDrawer extends HTMLElement {
+    //一个针对open属性的getter/setter
+    get open() {
+        return this.hasAttribute('open');
+    }
+
+    set open(val) {
+        //为元素添加open属性
+        if (val) {
+            this.setAttribute('open', '');
+        } else {
+            this.removeAttribute('open');
+        }
+        this.toggleDrawer();
+    }
+    //可以定义构造器函数
+    constructor() {
+        //定义构造器函数时总是首先调用super()!
+        super();
+        //对<app-drawer>设置一个click监听器.
+        this.addEventListener('click', e => {
+            this.toggleDrawer();
+        });
+    }
+
+    toggleDrawer() {
+       if(!this.open){
+           this.innerHTML="抽屉被打开";
+           this.setAttribute('open', '');
+       }
+       else{
+          this.innerHTML="抽屉被关闭";
+          this.removeAttribute('open');
+       }
+    }
+}
+
+customElements.define('app-drawer', AppDrawer);
+</script>
+</head>
+<body>
+<app-drawer>抽屉被关闭</app-drawer>
+</body>
+</html> -->

@@ -1,0 +1,68 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>在createdCallback事件回调函数中为元素添加指定内部HTML代码</title>
+<style>
+app-drawer{
+    background-color:blue;
+    color:white;
+    display:block;
+    width:200px;
+    height:200px;
+}
+</style>
+<script>
+window.customElements.define('app-drawer', class extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = "自定义元素示例</b>";
+    }
+});
+</script>
+</head>
+<body>
+<app-drawer></app-drawer>
+</body>
+</html> -->
+
+
+<!-- 建议这样去做 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <app-drawer>
+  <p>这段内容会被保留在 slot 中</p>
+</app-drawer>
+<script>
+window.customElements.define('app-drawer', class extends HTMLElement {
+    constructor() {
+        super();
+        // 创建 Shadow DOM
+        const shadow = this.attachShadow({mode: 'open'});
+        
+        // 添加模板和样式，不影响用户原有内容
+        shadow.innerHTML = `
+            <style>
+                :host {
+                    display: block;
+                    background: blue;
+                    color: white;
+                    width: 200px;
+                    height: 200px;
+                    padding: 10px;
+                }
+            </style>
+            <div>
+                <h2>抽屉标题</h2>
+                <slot></slot> <!-- 保留用户原有内容的位置 -->
+            </div>
+        `;
+    }
+});
+</script>
+</body>
+</html>

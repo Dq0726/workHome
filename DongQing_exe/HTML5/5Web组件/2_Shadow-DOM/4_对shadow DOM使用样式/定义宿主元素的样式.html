@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shadow DOM 示例</title>
+    <style>
+        /* 外部样式 */
+        #my-element {
+            color: green; /* 这个样式默认不会影响 Shadow DOM 内部 */
+        }
+    </style>
+</head>
+<body>
+    <div id="my-element">外部内容</div>
+
+    <script>
+        // 获取元素并附加 Shadow DOM
+        const element = document.getElementById('my-element');
+        const shadowRoot = element.attachShadow({ mode: 'open' });
+
+        // 设置 Shadow DOM 内部内容和样式
+        shadowRoot.innerHTML = `
+            <style>
+                :host {
+                    background-color: pink; /* 宿主元素背景色 */
+                    color: blue; /* 宿主元素文本颜色 */
+                }
+                h3 {
+                    color: red; /* Shadow DOM 内部 h3 元素的颜色 */
+                }
+            </style>
+            <h3>Shadow DOM 内容</h3>`;
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>扩展其他自定义元素</title>
+<style>
+fancy-drawer{
+    background-color:gray;
+    color:white;
+    display:block;
+    width:200px;
+    height:200px;
+}
+</style>
+<script>
+class AppDrawer extends HTMLElement {
+    //一个针对open属性的getter/setter
+    get open() {
+        return this.hasAttribute('open');
+    }
+
+    set open(val) {
+        //为元素添加open属性
+        if (val) {
+            this.setAttribute('open', '');
+        } else {
+            this.removeAttribute('open');
+        }
+        this.toggleDrawer();
+    }
+    //可以定义构造器函数
+    constructor() {
+        //定义构造器函数时总是首先调用super()!
+        super();
+        //对<app-drawer>设置一个click监听器.
+        this.addEventListener('click', e => {
+            this.toggleDrawer();
+        });
+    }
+
+    toggleDrawer() {
+       if(!this.open){
+           this.innerHTML="抽屉被打开";
+           this.setAttribute('open', '');
+       }
+       else{
+          this.innerHTML="抽屉被关闭";
+          this.removeAttribute('open');
+       }
+    }
+}
+class FancyDrawer extends AppDrawer {
+    //一个针对color属性的getter/setter
+    get backgroundColor() {
+        return this.hasAttribute('backgroundColor');
+    }
+
+    set backgroundColor(val) {
+        //为元素添加width属性
+        this.setAttribute('backgroundColor', val);
+    }
+    toggleDrawer() {
+         super.toggleDrawer();
+         if(!this.open) 
+             this.style.backgroundColor="gray";
+         else
+             this.style.backgroundColor=
+                 this.getAttribute('backgroundColor');
+    }
+}
+customElements.define('fancy-drawer',FancyDrawer);
+</script>
+</head>
+<body>
+<fancy-drawer backgroundColor="blue">抽屉被关闭</fancy-drawer>
+</body>
+</html>

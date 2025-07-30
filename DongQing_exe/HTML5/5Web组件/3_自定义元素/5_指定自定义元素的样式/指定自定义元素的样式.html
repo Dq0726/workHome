@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>指定自定义元素的样式</title>
+<style>
+app-drawer {
+    display: flex;
+    width:100px;
+}
+panel-item {
+    background: orange;
+    transition: opacity 400ms ease-in-out;
+    opacity: 0.3;
+    flex: 1;
+    text-align: center;
+    border-radius: 50%;
+}
+panel-item:hover {
+    opacity: 1.0;
+    background: rgb(255, 0, 255);
+    color: white;
+    cursor:pointer;
+}
+app-panel > panel-item {
+    padding: 5px;
+    list-style: none;
+    margin: 0 7px;
+}
+</style>
+
+<script>
+window.customElements.define('app-drawer', class extends HTMLElement {
+    constructor() {
+        super(); 
+    }
+});
+</script>
+</head>
+<body>
+<div>
+<app-drawer>
+    <panel-item>1</panel-item>
+    <panel-item>2</panel-item>
+    <panel-item>3</panel-item>
+</app-drawer>
+</div>
+</body>
+</html>
