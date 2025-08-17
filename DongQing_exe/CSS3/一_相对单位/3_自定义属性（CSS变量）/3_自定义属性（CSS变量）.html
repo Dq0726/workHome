@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Variables Example</title>
+    <style>
+        :root {
+            --main-bg: #fff;
+            --main-color: #000;
+        }
+
+        .panel {
+            font-size: 1rem;
+            padding: 1em;
+            border: 1px solid #999;
+            border-radius: 0.5em;
+            background-color: var(--main-bg);
+            color: var(--main-color);
+        }
+
+        .panel>h2 {
+            margin-top: 0;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .dark {
+            margin-top: 2em;
+            padding: 1em;
+            background-color: #999;
+            --main-bg: red;
+            --main-color: orange;
+        }
+
+        .dark>h2 {
+            color: var(--main-color);
+            background-color: var(--main-bg);
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <h2>Panel Title</h2>
+        <p>This is a panel with light background and dark text.</p>
+    </div>
+    <div class="dark">
+        <h2>Dark Panel Title</h2>
+        <p>This is a dark panel with dark background and light text.</p>
+    </div>
+    <script type="text/javascript">
+        // 获取根元素
+        var rootElement = document.documentElement;
+        // 获取根元素的计算样式
+        var styles = getComputedStyle(rootElement);
+        // 获取--main-bg变量的值
+        var mainColor = styles.getPropertyValue('--main-bg');
+        console.log(String(mainColor).trim());
+
+        // 修改根元素的--main-bg变量的值为浅蓝色
+        rootElement.style.setProperty('--main-bg', '#cdf');
+    </script>
+</body>
+
+</html>
