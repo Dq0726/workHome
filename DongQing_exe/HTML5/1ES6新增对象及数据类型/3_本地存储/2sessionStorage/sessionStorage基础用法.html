@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Session Storage Demo</title>
+</head>
+<body>
+	<script>
+		// 存储数据
+		sessionStorage.setItem('name', 'DongQing');
+		sessionStorage.setItem('age', '25');
+		//读取数据
+		sessionStorage.getItem('name');
+		sessionStorage.getItem('age');
+
+		//删除数据
+		sessionStorage.removeItem('name');
+
+		sessionStorage.clear();
+	</script>
+</body>
+</html>

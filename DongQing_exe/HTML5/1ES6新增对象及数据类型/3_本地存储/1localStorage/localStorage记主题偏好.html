@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body.light {
+			background-color: white;
+			color: black;
+		}
+
+		body.dark {
+			background-color: black;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<button id="themeToggle">切换主题</button>
+	</div>
+	<script>
+		// 初始化主题
+		function setTheme(themeName) {
+			localStorage.setItem('theme', themeName);
+			document.body.className = themeName
+
+		}
+		// 页面加载时应用主题
+		function loadTheme() {
+			const savedTheme = localStorage.getItem('theme');
+			document.body.className = savedTheme || 'light';
+		}
+		// 初始化样式
+		document.addEventListener('DOMContentLoaded', loadTheme);
+
+
+		document.getElementById('themeToggle').addEventListener('click', function () {
+			const currentTheme = localStorage.getItem('theme') || 'light';
+			const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+			setTheme(newTheme);
+		});
+	</script>
+</body>
+
+</html>

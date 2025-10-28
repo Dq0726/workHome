@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script>
+		// 1. 存储数据
+		localStorage.setItem('username', 'john_doe');
+		localStorage.setItem('theme', 'dark');
+
+		// 3. 删除数据
+		localStorage.removeItem('username')
+
+		// 4. 清除所有数据
+		localStorage.clear()
+
+		// 2. 读取数据
+		const username = localStorage.getItem('username');
+		const theme = localStorage.getItem('theme');
+
+		// 5. 获取存储的数据数量
+		localStorage.setItem('fruit', 'apple');
+		localStorage.setItem('clothes', 'shirt');
+		const count = localStorage.length;
+		//
+		console.log(`有${count}条数据存储在localStorage中`);
+		// 6. 通过索引获取key
+		console.log(localStorage.key(1));
+
+		// 7. 存储复杂数据类型
+		const user = { name: 'Alice', age: 30 };
+		localStorage.setItem('userData', JSON.stringify(user));
+		const storedData = localStorage.getItem('userData');
+		console.log(storedData);
+
+
+		console.log('Username:', username); // 输出: Username: john_doe
+		console.log('Theme:', theme);       // 输出: Theme: dark
+	</script>
+</body>
+
+</html>
